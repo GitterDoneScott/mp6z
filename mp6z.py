@@ -74,9 +74,9 @@ args = parser.parse_args()
 if args.verbose:
     print("Verbosity turned on\r")
     if args.mode:
-        print "Mode: " + args.mode + "\r"
+        print("Mode: " + args.mode + "\r")
     if args.zone:
-        print "Zone:", args.zone, "\r"
+        print("Zone:", args.zone, "\r")
 
 #### Controller Inquiry reply structure
 ## Set commands
@@ -106,8 +106,8 @@ if args.verbose:
 
 try: 
     ser.open()
-except Exception, e:
-    print "Error opening serial port: " + str(e)
+except Exception as e:
+    print("Error opening serial port: " + str(e))
     exit()
 
 def getZones(zoneNum = None):
@@ -121,7 +121,7 @@ def getZones(zoneNum = None):
                 sendstring = "?" + str(zoneNum) + "\r"
                 ser.write(sendstring)
                 if args.verbose:
-                    print("write data: " + sendstring)
+                    print(("write data: " + sendstring))
                 time.sleep(0.2)
             else:
                 ser.write("?10\r")
@@ -144,8 +144,8 @@ def getZones(zoneNum = None):
                 if re.match("^#>.{22}", response):
                     response = response[2:] #strip leading 3 chars from response
                     if args.verbose:
-                        print("read data: " + response)
-                    settings = [response[i:i+2] for i in xrange(0, len(response), 2)]  #split response into pairs of characters
+                        print(("read data: " + response))
+                    settings = [response[i:i+2] for i in range(0, len(response), 2)]  #split response into pairs of characters
                 
                     # Populate our dictionary of dictionaries with data
                     zone[settings[0]] = {}
@@ -170,12 +170,12 @@ def getZones(zoneNum = None):
                     if (numOfLines >= 22):
                         break
 
-            print json.dumps(zone, sort_keys=True, indent=2)
-        except Exception, e1:
-            print "Error communicating...: " + str(e1)
+            print(json.dumps(zone, sort_keys=True, indent=2))
+        except Exception as e1:
+            print("Error communicating...: " + str(e1))
 
     else:
-        print "Cannot open serial port "
+        print("Cannot open serial port ")
 
 def setZone(zoneNum):
     if ser.isOpen():
@@ -187,55 +187,55 @@ def setZone(zoneNum):
                 sendstring = "<" + str(zoneNum) + "vo" + str(args.v).zfill(2) + "\r"
                 ser.write(sendstring)
                 if args.verbose:
-                    print("write data: " + sendstring)
+                    print(("write data: " + sendstring))
                 time.sleep(0.1)
             if args.s != None:
                 sendstring = "<" + str(zoneNum) + "ch" + str(args.s).zfill(2) + "\r"
                 ser.write(sendstring)
                 if args.verbose:
-                    print("write data: " + sendstring)
+                    print(("write data: " + sendstring))
                 time.sleep(0.1)
             if args.b != None:
                 sendstring = "<" + str(zoneNum) + "bs" + str(args.b).zfill(2) + "\r"
                 ser.write(sendstring)
                 if args.verbose:
-                    print("write data: " + sendstring)
+                    print(("write data: " + sendstring))
                 time.sleep(0.1)
             if args.t != None:
                 sendstring = "<" + str(zoneNum) + "tr" + str(args.t).zfill(2) + "\r"
                 ser.write(sendstring)
                 if args.verbose:
-                    print("write data: " + sendstring)
+                    print(("write data: " + sendstring))
                 time.sleep(0.1)
             if args.m != None:
                 sendstring = "<" + str(zoneNum) + "mu" + str(args.m).zfill(2) + "\r"
                 ser.write(sendstring)
                 if args.verbose:
-                    print("write data: " + sendstring)
+                    print(("write data: " + sendstring))
                 time.sleep(0.1)
             if args.d != None:
                 sendstring = "<" + str(zoneNum) + "dt" + str(args.d).zfill(2) + "\r"
                 ser.write(sendstring)
                 if args.verbose:
-                    print("write data: " + sendstring)
+                    print(("write data: " + sendstring))
                 time.sleep(0.1)
             if args.p != None:
                 sendstring = "<" + str(zoneNum) + "pr" + str(args.p).zfill(2) + "\r"
                 ser.write(sendstring)
                 if args.verbose:
-                    print("write data: " + sendstring)
+                    print(("write data: " + sendstring))
                 time.sleep(0.1)
             if args.bl != None:
                 sendstring = "<" + str(zoneNum) + "bl" + str(args.bl).zfill(2) + "\r"
                 ser.write(sendstring)
                 if args.verbose:
-                    print("write data: " + sendstring)
+                    print(("write data: " + sendstring))
                 time.sleep(0.1)
                
             getZones(args.zone)
         
-        except Exception, e1:
-            print "Error communicating...: " + str(e1)
+        except Exception as e1:
+            print("Error communicating...: " + str(e1))
     
 if args.mode == "get":
     if args.zone:
