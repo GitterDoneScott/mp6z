@@ -6,6 +6,7 @@
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
 
+from typing_extensions import Required
 import serial, time, re, json, argparse
 
 # Change the source names and zone names for your house.  Up to 3 units can be chained
@@ -16,7 +17,7 @@ sourceNames['01'] = 'Empty'
 sourceNames['02'] = 'Empty'
 sourceNames['03'] = 'Empty'
 sourceNames['04'] = 'Empty'
-sourceNames['05'] = 'Chromecast1'
+sourceNames['05'] = 'MoodeAudio'
 sourceNames['06'] = 'Empty'
 
 zoneNames = {}
@@ -25,8 +26,8 @@ zoneNames['12'] = 'Master Bath'
 zoneNames['13'] = 'Library'
 zoneNames['14'] = 'Parlor'
 zoneNames['15'] = 'Screen Porch'
-zoneNames['16'] = 'None'
-zoneNames['21'] = 'Ununsed'
+zoneNames['16'] = 'Unused'
+zoneNames['21'] = 'Unused'
 zoneNames['22'] = 'Unused'
 zoneNames['23'] = 'Unused'
 zoneNames['24'] = 'Unused'
@@ -39,6 +40,8 @@ zoneNames['34'] = 'Unused'
 zoneNames['35'] = 'Unused'
 zoneNames['36'] = 'Unused'
 
+#define the zone dict globally for the clone mode
+zone = {}
 
 
 ser = serial.Serial()
@@ -59,8 +62,9 @@ ser.writeTimeout = 2     #timeout for write
 
 # Parse our arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("mode", help="<get|set>")
+parser.add_argument("mode", help="<get|set|clone>", required=True)
 parser.add_argument("zone", nargs='?', help="<11-16,21-26,31-36>", type=int)
+parser.add_argument("targetzone", help="target zone for clone mode", type=int)
 parser.add_argument("--verbose", help="Increase output verbosity", action="store_true")
 parser.add_argument("-v", help="Set Volume (0-38)", type=int)
 parser.add_argument("-s", help="Set Source (1-6)", type=int)
@@ -148,7 +152,7 @@ def getZones(zoneNum = None):
                     settings = [response[i:i+2] for i in range(0, len(response), 2)]  #split response into pairs of characters
                 
                     # Populate our dictionary of dictionaries with data
-                    zone[settings[0]] = {}
+                    #zone[settings[0]] = {} #redefined globablly
                     zone[settings[0]]['pa'] = settings[1]
                     zone[settings[0]]['power'] = settings[2]
                     zone[settings[0]]['mute'] = settings[3]
@@ -245,5 +249,28 @@ if args.mode == "get":
 
 if args.mode == "set":
     setZone(args.zone)
-    
+
+if args.mode == "clone":
+    #check for source and target zones arguments
+    if args.zone != None and args.targetzone != None:    
+        #get source zone
+        getZones(args.zone)
+        print(zone)
+        
+        #set arguments from source
+        args.v = zone[args.zone]['volume']
+        args.s = zone[args.zone]['source']
+        args.b = zone[args.zone]['bass']
+        args.t = zone[args.zone]['treble']
+        args.m = zone[args.zone]['mute']
+        args.d = zone[args.zone]['dnd']
+        args.p = zone[args.zone]['power']
+        args.bl = zone[args.zone]['balance']
+        #args.pa = zone[args.zone]['pa']
+        print(args)
+            
+        #set zone argument to target zone
+        setZone(args.targetzone)
+    else:
+        print("zone and targetzone must be defined")
 ser.close()
