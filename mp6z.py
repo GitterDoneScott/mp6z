@@ -117,7 +117,8 @@ def getZones(zoneNum = None):
     if ser.isOpen():
 
         try:
-            zone = {}
+            #use global definition for clone
+            #zone = {}
             ser.flushInput() #flush input buffer, discarding all its contents
             ser.flushOutput() #flush output buffer, aborting current output and discard 
             if zoneNum:
@@ -151,7 +152,7 @@ def getZones(zoneNum = None):
                     settings = [response[i:i+2] for i in xrange(0, len(response), 2)]  #split response into pairs of characters
                 
                     # Populate our dictionary of dictionaries with data
-                    #zone[settings[0]] = {} #redefined globablly for clone
+                    zone[settings[0]] = {}
                     zone[settings[0]]['pa'] = settings[1]
                     zone[settings[0]]['power'] = settings[2]
                     zone[settings[0]]['mute'] = settings[3]
@@ -257,14 +258,14 @@ if args.mode == "clone":
         print(zone)
         
         #set arguments from source
-        args.v = zone[args.zone]['volume']
-        args.s = zone[args.zone]['source']
-        args.b = zone[args.zone]['bass']
-        args.t = zone[args.zone]['treble']
-        args.m = zone[args.zone]['mute']
-        args.d = zone[args.zone]['dnd']
-        args.p = zone[args.zone]['power']
-        args.bl = zone[args.zone]['balance']
+        args.v = zone[str(args.zone))]['volume']
+        args.s = zone[str(args.zone)]['source']
+        args.b = zone[str(args.zone)]['bass']
+        args.t = zone[str(args.zone)]['treble']
+        args.m = zone[str(args.zone)]['mute']
+        args.d = zone[str(args.zone)]['dnd']
+        args.p = zone[str(args.zone)]['power']
+        args.bl = zone[str(args.zone)]['balance']
         #args.pa = zone[args.zone]['pa']
         print(args)
             
