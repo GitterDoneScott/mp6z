@@ -28,12 +28,13 @@ usage: mp6z.py mode [zone] [-h] [--verbose] [-v V] [-s S] [-b B] [-t T] [-m M] [
                
 
 positional arguments:
-  mode        <get|set>
+  mode        <get|set|clone>
   zone        <11-16,21-26,31-36>
 
 optional arguments:
   -h, --help  show this help message and exit
   --verbose   Increase output verbosity
+  --targetzone List of 1 or more target zones for the clone mode
   -v V        Set Volume (0-38)
   -s S        Set Source (1-6)
   -b B        Set Bass (0-7)
@@ -48,6 +49,10 @@ $ ./mp6z.py get   --  This will get the settings for all zones and output in JSO
 $ ./mp6z.py get 21 --  This will get the settings for the 1st zone on the second controller (if you have multiples chained)
 $ ./mp6z.py set 21 -v 15 -s 6 --  This will set the 1st zone on the second controller to use source 6 and set volume to 15.
                                   Output will be the new settings in JSON format.
+
+Create crontab entry from command line. Clone mode will run every minute. Note: Make sure cron is running
+
+$ (crontab -l 2>/dev/null; echo "* * * * * /home/pi/mp6z/mp6z.py clone 11 --targetzone 13 14 15") | crontab -
  
  
 pi@pizerow:~/mp6z $ ./mp6z.py set 21 -v 5 -s 6
