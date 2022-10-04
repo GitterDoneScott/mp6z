@@ -12,19 +12,19 @@ import serial, time, re, json, argparse
 # together.  Only the 6 sources on the main unit are available as inputs, but all of the 
 # outputs are available.
 sourceNames = {}
-sourceNames['01'] = 'Empty'
-sourceNames['02'] = 'Empty'
-sourceNames['03'] = 'Empty'
-sourceNames['04'] = 'Empty'
+sourceNames['01'] = 'Unused'
+sourceNames['02'] = 'Unused'
+sourceNames['03'] = 'Unused'
+sourceNames['04'] = 'Unused'
 sourceNames['05'] = 'MoodeAudio'
-sourceNames['06'] = 'Empty'
+sourceNames['06'] = 'Unused'
 
 zoneNames = {}
-zoneNames['11'] = 'Dining Room'
-zoneNames['12'] = 'Living Room'
-zoneNames['13'] = 'Library'
-zoneNames['14'] = 'Parlor'
-zoneNames['15'] = 'Screen Porch'
+zoneNames['11'] = 'Living/Dining Room'
+zoneNames['12'] = 'Unused'
+zoneNames['13'] = 'Lenai'
+zoneNames['14'] = 'Front Porch'
+zoneNames['15'] = 'Garage'
 zoneNames['16'] = 'Unused'
 zoneNames['21'] = 'Unused'
 zoneNames['22'] = 'Unused'
@@ -63,7 +63,7 @@ ser.writeTimeout = 2     #timeout for write
 parser = argparse.ArgumentParser()
 parser.add_argument("mode", help="<get|set_clone>")
 parser.add_argument("zone", nargs='?', help="<11-16,21-26,31-36>", type=int)
-parser.add_argument("--targetzone", help="target zone for clone mode", type=int)
+parser.add_argument("--targetzone", nargs='+', help="target zone(s) for clone mode", type=int)
 parser.add_argument("--verbose", help="Increase output verbosity", action="store_true")
 parser.add_argument("-v", help="Set Volume (0-38)", type=int)
 parser.add_argument("-s", help="Set Source (1-6)", type=int)
@@ -254,11 +254,13 @@ if args.mode == "clone":
     #check for source and target zones arguments
     if args.zone != None and args.targetzone != None:    
         #get source zone
+        print("Source Zone:")
         getZones(args.zone)
+        print("Zone:")
         print(zone)
         
         #set arguments from source
-        args.v = zone[str(args.zone))]['volume']
+        args.v = zone[str(args.zone)]['volume']
         args.s = zone[str(args.zone)]['source']
         args.b = zone[str(args.zone)]['bass']
         args.t = zone[str(args.zone)]['treble']
@@ -267,10 +269,14 @@ if args.mode == "clone":
         args.p = zone[str(args.zone)]['power']
         args.bl = zone[str(args.zone)]['balance']
         #args.pa = zone[args.zone]['pa']
+        print("args:")
         print(args)
-            
-        #set zone argument to target zone
-        setZone(args.targetzone)
+
+        for targetzone in args.targetzone:    
+            #set zone argument to target zone
+            setZone(targetzone)
+            print("Target zone after set:")
+            getZones(targetzone)
     else:
         print("zone and targetzone must be defined")
     
