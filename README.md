@@ -50,7 +50,7 @@ $ ./mp6z.py get 21 --  This will get the settings for the 1st zone on the second
 $ ./mp6z.py set 21 -v 15 -s 6 --  This will set the 1st zone on the second controller to use source 6 and set volume to 15.
                                   Output will be the new settings in JSON format.
 
-Create crontab entry from command line. Clone mode will run every minute. Note: Make sure cron is running
+Create crontab entry from command line. Clone mode will run every minute. Note: Make sure cron is running. I use this feature to enable one controller to effectively control other zones. Not perfect, but it gets the job done.
 
 $ (crontab -l 2>/dev/null; echo "* * * * * /home/pi/mp6z/mp6z.py clone 11 --targetzone 13 14 15") | crontab -
  
