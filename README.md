@@ -52,9 +52,18 @@ $ ./mp6z.py set 21 -v 15 -s 6 --  This will set the 1st zone on the second contr
 
 Create crontab entry from command line. Clone mode will run every minute. Note: Make sure cron is running. I use this feature to enable one controller to effectively control other zones. Not perfect, but it gets the job done.
 
-$ (crontab -l 2>/dev/null; echo "* * * * * /home/pi/mp6z/mp6z.py clone 11 --targetzone 13 14 15") | crontab -
- 
- 
+  (crontab -l 2>/dev/null; echo "* * * * * python2 /home/pi/mp6z/mp6z.py clone 11 --targetzone 13 14 15") | crontab -
+  
+To get python 2, with python-serial,running on a system which already has python 3.
+
+  sudo apt-get install python2 git
+  ps -lef | grep cron
+  sudo service cron start
+  curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py # Fetch get-pip.py for python 2.7 
+  python2 get-pip.py
+  pip --version
+  python2 -m pip install python-serial
+
 pi@pizerow:~/mp6z $ ./mp6z.py set 21 -v 5 -s 6
 {
   "21": {
