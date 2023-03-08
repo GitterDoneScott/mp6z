@@ -58,7 +58,9 @@ To get python 2, with python-serial,running on a system which already has python
 
   sudo apt-get install python2 git
   ps -lef | grep cron
-  sudo service cron start
+  sudo systemctl enable cron.service
+  sudo systemctl start cron.service
+  sudo systemctl status cron.service
   curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py # Fetch get-pip.py for python 2.7 
   python2 get-pip.py
   pip --version
